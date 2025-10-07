@@ -5,7 +5,6 @@
 package lab05_astghikminasyan;
 
 import javafx.application.Application;
-import javafx.beans.value.ObservableDoubleValue;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
@@ -18,9 +17,11 @@ import javafx.stage.Stage;
 
 /**
  * Git URL: https://github.com/Astghik-hub/Lab05Task02_AstghikMinasyan.git
+ *
  * @author Astghik Minasyan
  */
 public class Lab05Task02_AstghikMinasyan extends Application {
+
     // Names and prices for the beverage options
     static final String COFFEE = "Coffee";
     static final String TEA = "Tea";
@@ -34,7 +35,7 @@ public class Lab05Task02_AstghikMinasyan extends Application {
     static final double WATER_PRICE = 2.95;
     static final double MILK_PRICE = 1.5;
     static final double JUICE_PRICE = 2.5;
-    
+
     // Names and prices for the appetizer options
     static final String SOUP = "Soup";
     static final String SALAD = "Salad";
@@ -46,7 +47,7 @@ public class Lab05Task02_AstghikMinasyan extends Application {
     static final double ROLLS_PRICE = 5.25;
     static final double GARLIC_BREAD_PRICE = 3;
     static final double CHIP_SALSA_PRICE = 6.95;
-    
+
     // Names and prices for the main course options
     static final String STEAK = "Steak";
     static final String GRILLED_CHICKEN = "Grilled Chicken";
@@ -62,7 +63,7 @@ public class Lab05Task02_AstghikMinasyan extends Application {
     static final double SHRIMP_PRICE = 18.99;
     static final double PASTA_PRICE = 11.75;
     static final double FISH_PRICE = 12.25;
-        
+
     // Names and prices for the main course options
     static final String APPLE_PIE = "Apple Pie";
     static final String CARROT_CAKE = "Carrot cake";
@@ -74,7 +75,8 @@ public class Lab05Task02_AstghikMinasyan extends Application {
     static final double MUD_PIE_PRICE = 4.75;
     static final double PUDDING_PRICE = 3.25;
     static final double APPLE_CRISP_PRICE = 5.98;
-    
+
+    // Variables in order to claculate the total
     static double beveragePrice;
     static double appetizerPrice;
     static double mainPrice;
@@ -93,38 +95,38 @@ public class Lab05Task02_AstghikMinasyan extends Application {
 
     @Override
     public void start(Stage stage) {
-         // Create BorderPan and GridPane
+        // Create BorderPan and GridPane
         GridPane grid = new GridPane();
         grid.setHgap(10);
         grid.setVgap(10);
         grid.setPadding(new Insets(25, 25, 25, 25));
         BorderPane root = new BorderPane();
         root.setCenter(grid);
-        
+
         // Create labels
         Label beverageLabel = new Label("Beverage: ");
         Label appetizerLabel = new Label("Appetizer: ");
         Label mainLabel = new Label("Main Course: ");
         Label dessertLabel = new Label("Dessert: ");
         Label sliderLabel = new Label("Select Tip (%): ");
-        Label subtotalLabel = new Label(String.format("Subtotal: %.2f", subtotal));
-        Label taxLabel = new Label(String.format("Tax: %.2f", tax));
-        Label tipLabel = new Label(String.format("Tip: %.2f", tip));
-        Label totalLabel = new Label(String.format("Total: %.2f", total));
-        
+        Label subtotalLabel = new Label("Subtotal: 0.00$");
+        Label taxLabel = new Label("Tax: 0.00$");
+        Label tipLabel = new Label("Tip: 0.00$");
+        Label totalLabel = new Label("Total: 0.00$");
+
         //Create button
         Button clear = new Button("Clear");
-        
+
         // Create combo boxes
         ComboBox<String> beverageComboBox = new ComboBox<>();
         ComboBox<String> appetizerComboBox = new ComboBox<>();
         ComboBox<String> mainComboBox = new ComboBox<>();
-        ComboBox<String> dessertcComboBox = new ComboBox<>();
+        ComboBox<String> dessertComboBox = new ComboBox<>();
         beverageComboBox.getItems().addAll(COFFEE, TEA, SOFT_DRINK, WATER, MILK, JUICE);
         appetizerComboBox.getItems().addAll(SOUP, SALAD, SPRING_ROLLS, GARLIC_BREAD, CHIPS_SALSA);
         mainComboBox.getItems().addAll(STEAK, GRILLED_CHICKEN, CHICKEN_ALFREDO, TURKEY_CLUB, SHRIMP_SCAMPI, PASTA, FISH_CHIPS);
-        dessertcComboBox.getItems().addAll(APPLE_PIE, CARROT_CAKE, MUD_PIE, PUDDING, APPLE_CRISP);
-        
+        dessertComboBox.getItems().addAll(APPLE_PIE, CARROT_CAKE, MUD_PIE, PUDDING, APPLE_CRISP);
+
         // Create slider
         Slider slider = new Slider(0, 20, 15);
         slider.setShowTickMarks(true);
@@ -133,7 +135,7 @@ public class Lab05Task02_AstghikMinasyan extends Application {
         slider.setShowTickLabels(true);
         slider.setSnapToTicks(true);
         slider.setPrefWidth(300);
-        
+
         // Add elements to the grid
         grid.add(beverageLabel, 0, 0);
         grid.add(appetizerLabel, 1, 0);
@@ -142,105 +144,158 @@ public class Lab05Task02_AstghikMinasyan extends Application {
         grid.add(beverageComboBox, 0, 1);
         grid.add(appetizerComboBox, 1, 1);
         grid.add(mainComboBox, 2, 1);
-        grid.add(dessertcComboBox, 3, 1);
+        grid.add(dessertComboBox, 3, 1);
         grid.add(sliderLabel, 0, 5);
         grid.add(slider, 0, 6, 4, 1);
-        grid.add(clear, 0, 25);
+        grid.add(clear, 0, 15);
         grid.add(subtotalLabel, 0, 8);
         grid.add(tipLabel, 0, 9);
         grid.add(taxLabel, 0, 10);
         grid.add(totalLabel, 0, 11);
-        
+
         // Clear button event handler
         clear.setOnMouseClicked(e -> {
             beverageComboBox.getSelectionModel().clearSelection();
             appetizerComboBox.getSelectionModel().clearSelection();
             mainComboBox.getSelectionModel().clearSelection();
-            dessertcComboBox.getSelectionModel().clearSelection();
+            dessertComboBox.getSelectionModel().clearSelection();
             slider.setValue(15);
+
+            beveragePrice = 0;
+            appetizerPrice = 0;
+            mainPrice = 0;
+            dessertPrice = 0;
+            updateTotals(subtotalLabel, taxLabel, tipLabel, totalLabel, slider);
         });
-        
+
         // Add listeners to dertermine the price of each category
+        // Update the subtotal, the tax, the tip and the total
         beverageComboBox.getSelectionModel().selectedItemProperty().addListener((obs, oldVal, newVal) -> {
-            String item = beverageComboBox.getSelectionModel().getSelectedItem().toLowerCase();
-            
-            if (item.equals(COFFEE)) {
-                beveragePrice = COFFEE_PRICE;
+            if (newVal == null) {
+                return;
             }
-            
-            if (item.equals(TEA)) {
-                beveragePrice = TEA_PRICE;
+
+            switch (newVal) {
+                case COFFEE ->
+                    beveragePrice = COFFEE_PRICE;
+                case TEA ->
+                    beveragePrice = TEA_PRICE;
+                case SOFT_DRINK ->
+                    beveragePrice = DRINK_PRICE;
+                case WATER ->
+                    beveragePrice = WATER_PRICE;
+                case MILK ->
+                    beveragePrice = MILK_PRICE;
+                case JUICE ->
+                    beveragePrice = JUICE_PRICE;
             }
-            
-            if (item.equals(SOFT_DRINK)) {
-                beveragePrice = DRINK_PRICE;
-            }
-            
-            if (item.equals(WATER)) {
-                beveragePrice = WATER_PRICE;
-            }
-            
-            if (item.equals(MILK)) {
-                beveragePrice = MILK_PRICE;
-            }
-            
-            if (item.equals(JUICE)) {
-                beveragePrice = JUICE_PRICE;
-            }
-    });
-        
+
+            updateTotals(subtotalLabel, taxLabel, tipLabel, totalLabel, slider);
+        });
+
         appetizerComboBox.getSelectionModel().selectedItemProperty().addListener((obs, oldVal, newVal) -> {
-            String item = beverageComboBox.getSelectionModel().getSelectedItem().toLowerCase();
-            
-            if (item.equals("soup")) {
-                beveragePrice = SOUP_PRICE;
+            if (newVal == null) {
+                return;
             }
-            
-            if (item.equals("salad")) {
-                beveragePrice = SALALD_PRICE;
+
+            switch (newVal) {
+                case SOUP ->
+                    appetizerPrice = SOUP_PRICE;
+                case SALAD ->
+                    appetizerPrice = SALALD_PRICE;
+                case SPRING_ROLLS ->
+                    appetizerPrice = ROLLS_PRICE;
+                case GARLIC_BREAD ->
+                    appetizerPrice = GARLIC_BREAD_PRICE;
+                case CHIPS_SALSA ->
+                    appetizerPrice = CHIP_SALSA_PRICE;
+                default ->
+                    appetizerPrice = 0;
             }
-            
-            if (item.equals("spring rolls")) {
-                beveragePrice = ROLLS_PRICE;
-            }
-            
-            if (item.equals("garlic bread")) {
-                beveragePrice = GARLIC_BREAD_PRICE;
-            }
-            
-            if (item.equals("chips and salsa")) {
-                beveragePrice = CHIP_SALSA_PRICE;
-            }
-    });
-        
+
+            updateTotals(subtotalLabel, taxLabel, tipLabel, totalLabel, slider);
+        });
+
         mainComboBox.getSelectionModel().selectedItemProperty().addListener((obs, oldVal, newVal) -> {
-            String item = beverageComboBox.getSelectionModel().getSelectedItem().toLowerCase();
-            
-            if (item.equals("steak")) {
-                beveragePrice = SOUP_PRICE;
+            if (newVal == null) {
+                return;
             }
-            
-            if (item.equals("grilled chicken")) {
-                beveragePrice = SALALD_PRICE;
+
+            switch (newVal) {
+                case STEAK ->
+                    mainPrice = STEAK_PRICE;
+                case GRILLED_CHICKEN ->
+                    mainPrice = GRILLED_CHICKEN_PRICE;
+                case CHICKEN_ALFREDO ->
+                    mainPrice = CHICKEN_ALFREDO_PRICE;
+                case TURKEY_CLUB ->
+                    mainPrice = TURKEY_PRICE;
+                case SHRIMP_SCAMPI ->
+                    mainPrice = SHRIMP_PRICE;
+                case PASTA ->
+                    mainPrice = PASTA_PRICE;
+                case FISH_CHIPS ->
+                    mainPrice = FISH_PRICE;
+                default ->
+                    mainPrice = 0;
             }
-            
-            if (item.equals("chicken alfredo")) {
-                beveragePrice = ROLLS_PRICE;
+
+            updateTotals(subtotalLabel, taxLabel, tipLabel, totalLabel, slider);
+        });
+
+        dessertComboBox.getSelectionModel().selectedItemProperty().addListener((obs, oldVal, newVal) -> {
+            if (newVal == null) {
+                return;
             }
-            
-            if (item.equals("turkey club")) {
-                beveragePrice = GARLIC_BREAD_PRICE;
+
+            switch (newVal) {
+                case APPLE_PIE ->
+                    dessertPrice = APPLE_PIE_PRICE;
+                case CARROT_CAKE ->
+                    dessertPrice = CARROT_CAKE_PRICE;
+                case MUD_PIE ->
+                    dessertPrice = MUD_PIE_PRICE;
+                case PUDDING ->
+                    dessertPrice = PUDDING_PRICE;
+                case APPLE_CRISP ->
+                    dessertPrice = APPLE_CRISP_PRICE;
+                default ->
+                    dessertPrice = 0;
             }
-            
-            if (item.equals("chips and salsa")) {
-                beveragePrice = CHIP_SALSA_PRICE;
-            }
-    });
-        
+
+            updateTotals(subtotalLabel, taxLabel, tipLabel, totalLabel, slider);
+        });
+
+        // Add listner to the slider so that the tip updates
+        slider.valueProperty().addListener((obs, oldVal, newVal) -> {
+            updateTotals(subtotalLabel, taxLabel, tipLabel, totalLabel, slider);
+        });
+
         // Show the stage
         Scene scene = new Scene(root, 600, 500);
         stage.setTitle("User Bill Display");
         stage.setScene(scene);
         stage.show();
+    }
+
+    /**
+     * Updates the subtotal, the tax, the tip and the total
+     *
+     * @param subtotalLabel the label to display the subtotal
+     * @param taxLabel the label to display the tax
+     * @param tipLabel the label to display the tip
+     * @param totalLabel the label to display the total
+     * @param slider the slider to choose the tip
+     */
+    private void updateTotals(Label subtotalLabel, Label taxLabel, Label tipLabel, Label totalLabel, Slider slider) {
+        subtotal = beveragePrice + appetizerPrice + mainPrice + dessertPrice;
+        tax = subtotal * 0.15;
+        tip = subtotal * (slider.getValue() / 100);
+        total = subtotal + tax + tip;
+
+        subtotalLabel.setText(String.format("Subtotal: %.2f$", subtotal));
+        taxLabel.setText(String.format("Tax: %.2f$", tax));
+        tipLabel.setText(String.format("Tip: %.2f$", tip));
+        totalLabel.setText(String.format("Total: %.2f$", total));
     }
 }
